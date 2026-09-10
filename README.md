@@ -1,5 +1,5 @@
 <div align="center">
 
-## Projet-fil-rouge
+## Projet - Fil rouge
 
 <div/>
