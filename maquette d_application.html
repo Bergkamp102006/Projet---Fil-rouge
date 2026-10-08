@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Career - Maquette interactive</title>
+<style>
+:root{
+  --navy:#17324d; --blue:#2f6fed; --orange:#f47b3a; --bg:#f5f7fb;
+  --card:#fff; --text:#17212b; --muted:#6b7785; --line:#e5e9f0;
+  --green:#25a66a; --yellow:#e7a927; --red:#d9534f;
+}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
+button{font:inherit;cursor:pointer;border:0}.app{display:flex;min-height:100vh}
+.sidebar{width:245px;background:var(--navy);color:#fff;padding:24px 16px;position:fixed;top:0;bottom:0}
+.logo{font-size:23px;font-weight:800;padding:0 10px 28px}.logo span{color:#79a8ff}
+.nav button{display:block;width:100%;text-align:left;background:transparent;color:#dce6f2;padding:13px 14px;border-radius:10px;margin:5px 0}
+.nav button:hover,.nav button.active{background:#264966;color:#fff}
+.nav small{display:block;color:#9db0c4;text-transform:uppercase;letter-spacing:.08em;padding:22px 14px 6px}
+.main{margin-left:245px;width:calc(100% - 245px)}
+.topbar{height:70px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:3}
+.search{border:1px solid var(--line);border-radius:10px;padding:10px 14px;width:310px}
+.avatar{width:38px;height:38px;border-radius:50%;background:#dce8ff;color:var(--navy);display:grid;place-items:center;font-weight:700}
+.content{padding:30px;max-width:1400px;margin:auto}.page{display:none}.page.active{display:block}
+h1{font-size:29px;margin:0 0 7px}.subtitle{color:var(--muted);margin:0 0 25px}
+.grid{display:grid;gap:18px}.grid4{grid-template-columns:repeat(4,1fr)}.grid3{grid-template-columns:repeat(3,1fr)}.grid2{grid-template-columns:repeat(2,1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:21px;box-shadow:0 3px 14px rgba(22,42,66,.04)}
+.stat{font-size:28px;font-weight:800;margin:8px 0}.label{color:var(--muted);font-size:14px}
+.progress{height:8px;background:#edf0f5;border-radius:99px;overflow:hidden}.progress i{display:block;height:100%;background:var(--blue);border-radius:99px}
+.btn{padding:10px 15px;border-radius:9px;font-weight:650}.primary{background:var(--blue);color:#fff}.secondary{background:#eef3ff;color:#285ac4}.ghost{background:#fff;border:1px solid var(--line)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px}.tags{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.tag{background:#eef3ff;color:#315fae;padding:6px 9px;border-radius:99px;font-size:12px}
+.meter{height:10px;background:#edf0f5;border-radius:99px}.meter span{display:block;height:100%;border-radius:99px;background:var(--green)}
+.job{border:1px solid var(--line);border-radius:13px;padding:18px;margin-bottom:12px;background:#fff}.job h3{margin:0 0 7px}.job p{margin:5px 0;color:var(--muted)}
+.badge{font-size:12px;font-weight:700;padding:6px 9px;border-radius:8px;background:#eaf8f1;color:#188454}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:13px;border-bottom:1px solid var(--line);font-size:14px}th{color:var(--muted);font-weight:600}
+.bar{height:160px;display:flex;align-items:end;gap:13px;padding:10px 8px}.bar div{flex:1;background:#8db0f5;border-radius:6px 6px 0 0;position:relative}.bar span{position:absolute;top:-20px;font-size:11px;color:var(--muted);width:100%;text-align:center}
+.modal{display:none;position:fixed;inset:0;background:rgba(8,23,38,.55);z-index:10;align-items:center;justify-content:center;padding:20px}.modal.open{display:flex}.modalbox{background:#fff;border-radius:18px;padding:26px;max-width:650px;width:100%;max-height:85vh;overflow:auto}
+.form{display:grid;gap:12px}.form input,.form select,.form textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:9px}
+.toast{position:fixed;right:25px;bottom:25px;background:var(--navy);color:#fff;padding:13px 17px;border-radius:10px;display:none;z-index:20}
+.toast.show{display:block}
+@media(max-width:900px){.sidebar{width:70px}.logo{font-size:0}.logo:after{content:"DC";font-size:20px}.nav button{font-size:0;text-align:center}.nav button:before{content:"•";font-size:20px}.main{margin-left:70px;width:calc(100% - 70px)}.grid4,.grid3{grid-template-columns:1fr 1fr}.search{width:180px}}
+@media(max-width:600px){.grid4,.grid3,.grid2{grid-template-columns:1fr}.content{padding:18px}.topbar{padding:0 15px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="logo">Data <span>Career</span></div>
+  <nav class="nav">
+    <small>Étudiant</small>
+    <button class="active" data-page="dashboard">🏠 Tableau de bord</button>
+    <button data-page="profil">👤 Mon profil</button>
+    <button data-page="metiers">💼 Métiers Data</button>
+    <button data-page="parcours">🧭 Mon parcours</button>
+    <small>Administration</small>
+    <button data-page="admin">📊 Dashboard admin</button>
+  </nav>
+</aside>
+
+<main class="main">
+<header class="topbar">
+  <input class="search" placeholder="Rechercher un métier, une compétence..." oninput="globalSearch(this.value)">
+  <div class="row"><span style="margin-right:12px;color:#667">Champion</span><div class="avatar">MO</div></div>
+</header>
+
+<section class="content">
+
+<div id="dashboard" class="page active">
+  <h1>Bonjour Champion 👋</h1>
+  <p class="subtitle">Voici où vous en êtes dans votre projet professionnel.</p>
+  <div class="grid grid4">
+    <div class="card"><div class="label">Profil complété</div><div class="stat">82%</div><div class="progress"><i style="width:82%"></i></div></div>
+    <div class="card"><div class="label">Métiers recommandés</div><div class="stat">6</div><span class="badge">+2 cette semaine</span></div>
+    <div class="card"><div class="label">Compétences maîtrisées</div><div class="stat">14 / 20</div><div class="progress"><i style="width:70%"></i></div></div>
+    <div class="card"><div class="label">Objectif</div><div class="stat" style="font-size:20px">Data Analyst</div><span class="label">Performance & Pricing</span></div>
+  </div>
+  <div class="grid grid2" style="margin-top:18px">
+    <div class="card">
+      <div class="row"><div><h2 style="margin:0">Votre recommandation IA</h2><p class="subtitle" style="margin-top:5px">Analyse basée sur votre profil</p></div><span class="badge">92% de correspondance</span></div>
+      <h3>Data Analyst</h3>
+      <p>Votre formation, vos compétences SQL/Power BI et votre intérêt pour l'analyse correspondent fortement à ce métier.</p>
+      <div class="tags"><span class="tag">SQL</span><span class="tag">Power BI</span><span class="tag">Statistiques</span><span class="tag">Business</span></div>
+      <button class="btn primary" onclick="openRecommendation()">Voir pourquoi</button>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0">Compétences à développer</h2>
+      <p class="label">Pour votre objectif Data Analyst</p>
+      <div style="margin:17px 0"><div class="row"><b>Python avancé</b><span>55%</span></div><div class="meter"><span style="width:55%"></span></div></div>
+      <div style="margin:17px 0"><div class="row"><b>Machine Learning</b><span>40%</span></div><div class="meter"><span style="width:40%"></span></div></div>
+      <div style="margin:17px 0"><div class="row"><b>Data storytelling</b><span>35%</span></div><div class="meter"><span style="width:35%"></span></div></div>
+      <button class="btn secondary" onclick="showPage('parcours')">Construire mon parcours</button>
+    </div>
+  </div>
+</div>
+
+<div id="profil" class="page">
+  <h1>Mon profil étudiant</h1><p class="subtitle">Ces informations servent à personnaliser vos recommandations.</p>
+  <div class="card">
+    <div class="form">
+      <label>Formation<select><option>BUT Sciences des Données</option><option>Master Data Science</option></select></label>
+      <label>Niveau<select><option>BUT 3</option><option>BUT 2</option><option>Master 1</option></select></label>
+      <label>Objectif professionnel<select><option>Data Analyst</option><option>Data Scientist</option><option>Data Engineer</option></select></label>
+      <label>Centres d'intérêt<textarea rows="3">Analyse de données, performance, pricing, banque, assurance</textarea></label>
+      <label>Compétences<textarea rows="3">SQL, Power BI, R, Python, Excel, statistiques</textarea></label>
+      <button class="btn primary" onclick="toast('Profil enregistré — les recommandations sont mises à jour.')">Enregistrer mon profil</button>
+    </div>
+  </div>
+</div>
+
+<div id="metiers" class="page">
+  <h1>Métiers de la Data</h1><p class="subtitle">Explorez les métiers et comparez-les à votre profil.</p>
+  <div id="jobs">
+    <div class="job" data-search="data analyst sql power bi statistiques">
+      <div class="row"><div><h3>Data Analyst</h3><p>Analyse les données pour produire des indicateurs et aider à la décision.</p></div><span class="badge">92%</span></div>
+      <div class="tags"><span class="tag">SQL</span><span class="tag">Power BI</span><span class="tag">Statistiques</span></div>
+      <button class="btn secondary" onclick="openJob('Data Analyst','SQL · Power BI · Statistiques','Analyse, visualisation et interprétation des données pour accompagner les décisions.')">Découvrir</button>
+    </div>
+    <div class="job" data-search="data scientist python machine learning statistiques">
+      <div class="row"><div><h3>Data Scientist</h3><p>Conçoit des modèles statistiques et de machine learning.</p></div><span class="badge">78%</span></div>
+      <div class="tags"><span class="tag">Python</span><span class="tag">Machine Learning</span><span class="tag">R</span></div>
+      <button class="btn secondary" onclick="openJob('Data Scientist','Python · Machine Learning · R','Conçoit et évalue des modèles prédictifs à partir de données.')">Découvrir</button>
+    </div>
+    <div class="job" data-search="data engineer sql python cloud base données">
+      <div class="row"><div><h3>Data Engineer</h3><p>Construit les pipelines et infrastructures nécessaires à l'exploitation des données.</p></div><span class="badge">64%</span></div>
+      <div class="tags"><span class="tag">SQL</span><span class="tag">ETL</span><span class="tag">Cloud</span></div>
+      <button class="btn secondary" onclick="openJob('Data Engineer','SQL · ETL · Cloud','Met en place les flux, pipelines et infrastructures de données.')">Découvrir</button>
+    </div>
+  </div>
+</div>
+
+<div id="parcours" class="page">
+  <h1>Mon parcours personnalisé</h1><p class="subtitle">Un plan proposé à partir des écarts entre votre profil et votre métier cible.</p>
+  <div class="grid grid3">
+    <div class="card"><span class="badge">Étape 1</span><h3>Python avancé</h3><p class="label">4 semaines · 12 h</p><div class="progress"><i style="width:55%"></i></div><button class="btn secondary" style="margin-top:15px" onclick="toast('Module Python ouvert')">Commencer</button></div>
+    <div class="card"><span class="badge">Étape 2</span><h3>Machine Learning</h3><p class="label">6 semaines · 18 h</p><div class="progress"><i style="width:25%"></i></div><button class="btn secondary" style="margin-top:15px" onclick="toast('Module Machine Learning ouvert')">Commencer</button></div>
+    <div class="card"><span class="badge">Étape 3</span><h3>Data storytelling</h3><p class="label">2 semaines · 6 h</p><div class="progress"><i style="width:10%"></i></div><button class="btn secondary" style="margin-top:15px" onclick="toast('Module Data storytelling ouvert')">Commencer</button></div>
+  </div>
+  <div class="card" style="margin-top:18px"><h2>Assistant IA</h2><p>Posez une question sur votre orientation.</p>
+    <div class="row"><input id="aiInput" class="search" style="width:75%" placeholder="Ex. Quelles compétences développer pour le pricing ?"><button class="btn primary" onclick="askAI()">Demander à l'IA</button></div>
+    <div id="aiAnswer" style="margin-top:15px;color:#43515f"></div>
+  </div>
+</div>
+
+<div id="admin" class="page">
+  <h1>Dashboard — Administration pédagogique</h1><p class="subtitle">Vue synthétique des indicateurs étudiants.</p>
+  <div class="grid grid4">
+    <div class="card"><div class="label">Étudiants suivis</div><div class="stat">248</div></div>
+    <div class="card"><div class="label">Profils complets</div><div class="stat">81%</div></div>
+    <div class="card"><div class="label">Poursuite d'études favorable</div><div class="stat">67%</div></div>
+    <div class="card"><div class="label">Alertes à examiner</div><div class="stat">18</div></div>
+  </div>
+  <div class="grid grid2" style="margin-top:18px">
+    <div class="card"><h2>Indicateurs académiques</h2>
+      <div class="bar">
+        <div style="height:78%"><span>Notes</span></div><div style="height:64%"><span>Assiduité</span></div><div style="height:72%"><span>Compétences</span></div><div style="height:59%"><span>Parcours</span></div>
+      </div>
+    </div>
+    <div class="card"><h2>Profils à examiner</h2>
+      <table><thead><tr><th>Étudiant</th><th>Moyenne</th><th>Statut</th></tr></thead>
+      <tbody><tr><td>Étudiant A</td><td>14,8</td><td><span class="badge">Favorable</span></td></tr><tr><td>Étudiant B</td><td>12,4</td><td>À examiner</td></tr><tr><td>Étudiant C</td><td>15,2</td><td><span class="badge">Favorable</span></td></tr></tbody></table>
+    </div>
+  </div>
+</div>
+
+</section>
+</main>
+</div>
+
+<div class="modal" id="modal"><div class="modalbox"><div class="row"><h2 id="modalTitle">Détail</h2><button class="btn ghost" onclick="closeModal()">✕</button></div><div id="modalBody"></div></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const pages=document.querySelectorAll('.page');
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+function showPage(id){
+  pages.forEach(p=>p.classList.toggle('active',p.id===id));
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function openRecommendation(){
+  openModal('Pourquoi ce métier ?',`
+    <h3>Data Analyst — 92% de correspondance</h3>
+    <p><b>Formation :</b> forte correspondance avec les fondamentaux statistiques et data.</p>
+    <p><b>Compétences :</b> SQL, Power BI, R et Excel sont déjà présents dans le profil.</p>
+    <p><b>Objectif :</b> votre projet professionnel renforce la correspondance.</p>
+    <p><b>À développer :</b> Python avancé, Machine Learning et Data Storytelling.</p>
+    <button class="btn primary" onclick="closeModal();showPage('parcours')">Voir mon parcours</button>
+  `);
+}
+function openJob(name,tags,desc){
+  openModal(name,`<p>${desc}</p><div class="tags">${tags.split(' · ').map(x=>'<span class="tag">'+x+'</span>').join('')}</div><h3>Votre correspondance</h3><div class="progress"><i style="width:${name==='Data Analyst'?92:name==='Data Scientist'?78:64}%"></i></div><p class="label" style="margin-top:10px">La plateforme compare vos compétences, votre formation et votre objectif.</p>`);
+}
+function openModal(title,body){document.getElementById('modalTitle').textContent=title;document.getElementById('modalBody').innerHTML=body;document.getElementById('modal').classList.add('open')}
+function closeModal(){document.getElementById('modal').classList.remove('open')}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+function askAI(){const q=document.getElementById('aiInput').value.trim();document.getElementById('aiAnswer').innerHTML=q?`<div class="card"><b>Assistant IA :</b> Pour « ${q} », je vous conseille de renforcer Python, SQL avancé, statistiques appliquées et votre capacité à expliquer les résultats métier. Cette réponse est une maquette : dans l'application réelle, elle serait générée par votre moteur IA.</div>`:'Écrivez une question pour l’assistant.'}
+function globalSearch(value){
+  const q=value.toLowerCase().trim();
+  if(!q)return;
+  showPage('metiers');
+  document.querySelectorAll('.job').forEach(j=>j.style.display=j.dataset.search.includes(q)?'block':'none');
+}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+</script>
+</body>
+</html>
